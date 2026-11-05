@@ -10,7 +10,7 @@ GDOWN="${ROOT_DIR}/.venv/bin/gdown"
 # evaluator (t2m/humanml/text_mot_match/model/finest.tar) and dataset/{t2m,HML}_{mean,std}.npy
 EVALUATOR_URL="${ELMA_EVALUATOR_URL:-https://drive.google.com/file/d/1ZEHOOl3avMxgX_12ycagVj0_1oRz0r3q/view?usp=drive_link}"
 # results/humanml/ELMAv3_anap_hml3d_hist/ (A2M checkpoint)
-CHECKPOINTS_URL="${ELMA_CHECKPOINTS_URL:-https://drive.google.com/file/d/1-XqEum8HNNiMMbyiiMygIvDWylHjbpl8/view?usp=sharing}"
+CHECKPOINTS_URL="${ELMA_CHECKPOINTS_URL:-https://drive.google.com/file/d/1Zo9u2G_KcOld0tePNaQv6CYHYp1y-NyU/view?usp=sharing}"
 
 cd "${FLOWMDM_DIR}"
 # upstream scripts: SMPL body models (needed to build the FlowMDM model) and GloVe (evaluator)
