@@ -5,8 +5,7 @@ Evaluation code for [ELMA: Benchmarking Anaphoric Compositions for Long-Term Tex
 This repository evaluates FlowMDM checkpoints trained on ELMA under the anaphoric text-to-motion
 (A2M) setting. It does **not** contain FlowMDM: you clone the official
 [FlowMDM repository](https://github.com/BarqueroGerman/FlowMDM) yourself (pinned to commit
-`e81c67f`), and the code here imports it unmodified. Your use of FlowMDM is governed by its own
-license (academic / non-commercial research use only).
+`e81c67f`), and the code here imports it unmodified.
 
 ## Setup
 
