@@ -81,15 +81,6 @@ DATA_ROOT=/path/to/ELMA-v1.0/HML3D GPU_ID=0 EVAL_MODE=final bash scripts/eval_a2
 a `.log` with every replication and a `.json` with mean and 95% confidence interval of FID,
 R-precision (top 1–3), matching score and diversity.
 
-## 🗂️ Repository Layout
-
-- `elmabench/evaluate.py`: evaluation entry point
-- `elmabench/sampler.py`: batched multi-segment sampling with an upstream FlowMDM model
-- `elmabench/history.py`: history-text conditioning
-- `elmabench/gt_data.py`, `elmabench/generated_data.py`: GT and generated evaluation sets
-- `elmabench/upstream.py`: checks and imports the FlowMDM checkout
-- `scripts/`: environment setup, asset download and the A2M evaluation wrapper
-
 ## 🖊️ Citation
 
 If you find ELMA useful for your research, please cite:
