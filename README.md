@@ -1,4 +1,9 @@
-<h1 align="center">ELMABench</h1>
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/elmabench_title_dark.png">
+    <img alt="ELMABench" src="assets/elmabench_title_light.png" height="54">
+  </picture>
+</h1>
 
 <h3 align="center">ELMA: Benchmarking Anaphoric Compositions for Long-Term Text-to-Motion Generation</h3>
 
