@@ -2,8 +2,8 @@
 
 Evaluation code for [ELMA: Benchmarking Anaphoric Compositions for Long-Term Text-to-Motion Generation](https://arxiv.org/abs/2610.13549).
 
-This repository evaluates FlowMDM checkpoints trained on ELMA under the anaphoric text-to-motion
-(A2M) setting. It does **not** contain FlowMDM: you clone the official
+This repository evaluates FlowMDM trained on ELMA under the anaphoric text-to-motion (A2M)
+setting. It does **not** contain FlowMDM: you clone the official
 [FlowMDM repository](https://github.com/BarqueroGerman/FlowMDM) yourself (pinned to commit
 `e81c67f`), and the code here imports it unmodified.
 
@@ -26,12 +26,12 @@ Requirements: `git`, `unzip`, [`uv`](https://docs.astral.sh/uv/), a CUDA GPU.
    - SMPL body models and GloVe, with FlowMDM's own download scripts
    - the ELMA text-motion evaluator and its normalization statistics
      (`t2m/humanml/text_mot_match/model/finest.tar`, `dataset/t2m_{mean,std}.npy`)
-   - the ELMA-trained FlowMDM checkpoints (`results/humanml/ELMAv3_anap_hml3d{,_hist}/model000550000.pt`)
+   - the ELMA-trained FlowMDM A2M checkpoint (`results/humanml/ELMAv3_anap_hml3d_hist/model000550000.pt`)
 
-   The script checks the SHA256 of the evaluator, the statistics and the checkpoints.
+   The script checks the SHA256 of the evaluator, the statistics and the checkpoint.
 
 3. Download the HumanML3D-format export of ELMA (`HML3D.tar`, ~12 GB) from
-   [Hugging Face](https://huggingface.co/datasets/shun31y/ELMA). The checkpoints and the
+   [Hugging Face](https://huggingface.co/datasets/shun31y/ELMA). The checkpoint and the
    evaluator statistics above correspond to `v1.0`, the data used in the paper.
 
    ```bash

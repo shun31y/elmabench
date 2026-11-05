@@ -31,7 +31,7 @@ def history_embedding(clip_model, history, current_weight):
 def segment_embeddings(clip_model, samples, current_weight=None):
     """[max_segments, batch, clip_dim] embeddings for FlowMDM's multi-text conditioning.
 
-    current_weight=None is plain T2M conditioning: each segment sees only its own caption.
+    current_weight=None: each segment is conditioned on its own caption only.
     """
     device = next(clip_model.parameters()).device
     max_segments = max(len(s["texts"]) for s in samples)
