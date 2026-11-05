@@ -86,6 +86,22 @@ DATA_ROOT=/path/to/ELMA-v1.0/HML3D GPU_ID=0 EVAL_MODE=final bash scripts/eval_a2
 a `.log` with every replication and a `.json` with mean and 95% confidence interval of FID,
 R-precision (top 1–3), matching score and diversity.
 
+For full-generation A2M evaluation, generate all six segments (600 frames) from
+`humanml_test_set_anaphora_fullgen.json` and score only the segment marked as anaphoric
+in each sample ID:
+
+```bash
+DATA_ROOT=/path/to/ELMA-v1.0/HML3D GPU_ID=0 EVAL_MODE=debug bash scripts/eval_a2m.sh --scenario anaphora_fullgen
+```
+
+The other segments provide generated motion context. Their captions enter the same
+history-text conditioning as above. The default scenario, `anaphora`, generates only
+the 100-frame target segment.
+
+> **Note:** Full-generation evaluation takes substantially longer than target-only
+> evaluation because it generates all 600 frames for every sample. The `fast` and `final`
+> modes repeat this generation 5 and 10 times, respectively.
+
 ## 🖊️ Citation
 
 If you find ELMA useful for your research, please cite:
