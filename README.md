@@ -32,14 +32,19 @@ Requirements: `git`, `unzip`, [`uv`](https://docs.astral.sh/uv/), a CUDA GPU.
    The script checks the SHA256 of the evaluator, the statistics and the checkpoints.
 
 3. Download the HumanML3D-format export of ELMA (`HML3D.tar`, ~12 GB) from
-   [Hugging Face](https://huggingface.co/datasets/shun31y/ELMA). `v1.0` is the data used in the
-   paper; `v1.1` revises captions of the anaphora test set (motions are identical).
+   [Hugging Face](https://huggingface.co/datasets/shun31y/ELMA). The checkpoints and the
+   evaluator statistics above correspond to `v1.0`, the data used in the paper.
 
    ```bash
    pip install -U huggingface_hub   # outside .venv, which pins an older version
-   hf download shun31y/ELMA HML3D.tar --repo-type dataset --revision v1.1 --local-dir /path/to/ELMA-v1.1
-   tar -xf /path/to/ELMA-v1.1/HML3D.tar -C /path/to/ELMA-v1.1
+   hf download shun31y/ELMA HML3D.tar --repo-type dataset --revision v1.0 --local-dir /path/to/ELMA-v1.0
+   tar -xf /path/to/ELMA-v1.0/HML3D.tar -C /path/to/ELMA-v1.0
    ```
+
+   > **ELMA v2 is now available.** v2 removes noisy motions and captions from the test set
+   > (a human-reviewed subset of the v1.0 test set) and corrects the root height, so its motion
+   > features and normalization statistics differ from v1.0. See the
+   > [dataset page](https://huggingface.co/datasets/shun31y/ELMA) for details.
 
 ## A2M evaluation
 
@@ -48,7 +53,7 @@ captions before it (`0.5 * current + 0.5 * mean(previous)` CLIP embeddings), eva
 `test_anaphora`:
 
 ```bash
-DATA_ROOT=/path/to/ELMA-v1.1/HML3D GPU_ID=0 EVAL_MODE=final bash scripts/eval_a2m.sh
+DATA_ROOT=/path/to/ELMA-v1.0/HML3D GPU_ID=0 EVAL_MODE=final bash scripts/eval_a2m.sh
 ```
 
 `EVAL_MODE` is `final` (10 replications), `fast` (5) or `debug` (1). Results are written to
