@@ -35,8 +35,6 @@ setting. It does **not** contain FlowMDM: you clone the official
 
 ## 🚀 Getting Started
 
-Requirements: `git`, `unzip`, [`uv`](https://docs.astral.sh/uv/), a CUDA GPU.
-
 1. Clone upstream FlowMDM into `./FlowMDM` and create `./.venv`:
 
    ```bash
