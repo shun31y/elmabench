@@ -26,8 +26,10 @@ EVAL_MODES = {  # replications, diversity_times
     "final": (10, 300),
 }
 EVAL_BATCH_SIZE = 32  # R-precision is computed within batches of 32
-SCENARIO = "anaphora"
-EVAL_FILE = "humanml_test_set_anaphora.json"
+EVAL_FILES = {
+    "anaphora": "humanml_test_set_anaphora.json",
+    "anaphora_fullgen": "humanml_test_set_anaphora_fullgen.json",
+}
 
 
 def parse_args():
@@ -35,7 +37,9 @@ def parse_args():
     parser.add_argument("--flowmdm_dir", default="FlowMDM", help="clone of upstream FlowMDM (with assets)")
     parser.add_argument("--model_path", required=True)
     parser.add_argument("--data_root", required=True, help="ELMA HML3D directory (v1.0 or v1.1)")
-    parser.add_argument("--eval_file", default="", help=f"defaults to <data_root>/{EVAL_FILE}")
+    parser.add_argument("--scenario", default="anaphora", choices=sorted(EVAL_FILES),
+                        help="anaphora generates the target only; anaphora_fullgen generates all six segments")
+    parser.add_argument("--eval_file", default="", help="defaults to <data_root>/<scenario evaluation file>")
     parser.add_argument("--eval_mode", default="final", choices=sorted(EVAL_MODES))
     parser.add_argument("--guidance_param", default=2.5, type=float)
     parser.add_argument("--use_history_text", action="store_true", help="A2M conditioning (history-text mix)")
@@ -50,7 +54,7 @@ def parse_args():
     for name in ["flowmdm_dir", "model_path", "data_root", "eval_file", "output_dir"]:
         if getattr(args, name):
             setattr(args, name, os.path.abspath(getattr(args, name)))
-    args.eval_file = args.eval_file or os.path.join(args.data_root, EVAL_FILE)
+    args.eval_file = args.eval_file or os.path.join(args.data_root, EVAL_FILES[args.scenario])
     return args
 
 
@@ -72,7 +76,7 @@ def log_name(args):
     niter = os.path.basename(args.model_path).replace("model", "").replace(".pt", "")
     cond = f"hist_w{args.history_current_weight:g}" if args.use_history_text else "nohist"
     data = os.path.basename(os.path.splitext(args.eval_file)[0])
-    return f"{model}_{niter}_{SCENARIO}_{cond}_g{args.guidance_param:g}_{data}_{args.eval_mode}_s{args.seed}"
+    return f"{model}_{niter}_{args.scenario}_{cond}_g{args.guidance_param:g}_{data}_{args.eval_mode}_s{args.seed}"
 
 
 def main():
@@ -114,7 +118,7 @@ def main():
     gt_dataset = GTSegments(load_segments(args.data_root), eval_mean, eval_std, w_vectorizer, process_tokens)
     gt_loader = DataLoader(gt_dataset, batch_size=EVAL_BATCH_SIZE, shuffle=True, num_workers=0,
                            drop_last=False, collate_fn=collate)
-    samples = load_eval_samples(args.eval_file, SCENARIO)
+    samples = load_eval_samples(args.eval_file, args.scenario)
     print(f"GT segments: {len(gt_dataset)}  evaluation samples: {len(samples)}  ({args.eval_file})")
 
     log = open(os.path.join(out_dir, name + ".log"), "w")
