@@ -1,13 +1,34 @@
-# ELMABench
+<h1 align="center">ELMABench</h1>
 
-Evaluation code for [ELMA: Benchmarking Anaphoric Compositions for Long-Term Text-to-Motion Generation](https://arxiv.org/abs/2610.13549).
+<h3 align="center">ELMA: Benchmarking Anaphoric Compositions for Long-Term Text-to-Motion Generation</h3>
+
+<p align="center">
+  <a href="https://elma-dataset.github.io/"><img alt="Project Page" src="https://img.shields.io/badge/Project-Page-2ea44f?logo=googlechrome&logoColor=white"></a>
+  <a href="https://arxiv.org/abs/2610.13549"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-2610.13549-b31b1b.svg?logo=arxiv&logoColor=white"></a>
+  <a href="https://huggingface.co/datasets/shun31y/ELMA"><img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-ELMA-ffcc4d"></a>
+</p>
+
+<br>
 
 This repository evaluates FlowMDM trained on ELMA under the anaphoric text-to-motion (A2M)
 setting. It does **not** contain FlowMDM: you clone the official
 [FlowMDM repository](https://github.com/BarqueroGerman/FlowMDM) yourself (pinned to commit
 `e81c67f`), and the code here imports it unmodified.
 
-## Setup
+## 📰 News
+
+- [2026-11] Evaluation code and the FlowMDM A2M checkpoint released.
+- [2026-10] ELMA v2 released on [Hugging Face](https://huggingface.co/datasets/shun31y/ELMA), with a cleaned test set.
+- [2026-10] ELMA v1.0, the data used in the paper, released on [Hugging Face](https://huggingface.co/datasets/shun31y/ELMA).
+- [2026-10] Our paper (NeurIPS 2026 Evaluations and Datasets Track) is available on [arXiv](https://arxiv.org/abs/2610.13549).
+
+## ✅ TODO List
+
+- [x] Release the ELMA dataset.
+- [x] Release the FlowMDM A2M checkpoint.
+- [x] Release the A2M evaluation code.
+
+## 🚀 Getting Started
 
 Requirements: `git`, `unzip`, [`uv`](https://docs.astral.sh/uv/), a CUDA GPU.
 
@@ -45,7 +66,7 @@ Requirements: `git`, `unzip`, [`uv`](https://docs.astral.sh/uv/), a CUDA GPU.
    > features and normalization statistics differ from v1.0. See the
    > [dataset page](https://huggingface.co/datasets/shun31y/ELMA) for details.
 
-## A2M evaluation
+## 📊 A2M Evaluation
 
 A2M → A2M: the history-text checkpoint, conditioned on each segment's caption mixed with the
 captions before it (`0.5 * current + 0.5 * mean(previous)` CLIP embeddings), evaluated on
@@ -60,7 +81,7 @@ DATA_ROOT=/path/to/ELMA-v1.0/HML3D GPU_ID=0 EVAL_MODE=final bash scripts/eval_a2
 a `.log` with every replication and a `.json` with mean and 95% confidence interval of FID,
 R-precision (top 1–3), matching score and diversity.
 
-## Repository layout
+## 🗂️ Repository Layout
 
 - `elmabench/evaluate.py`: evaluation entry point
 - `elmabench/sampler.py`: batched multi-segment sampling with an upstream FlowMDM model
@@ -68,3 +89,20 @@ R-precision (top 1–3), matching score and diversity.
 - `elmabench/gt_data.py`, `elmabench/generated_data.py`: GT and generated evaluation sets
 - `elmabench/upstream.py`: checks and imports the FlowMDM checkout
 - `scripts/`: environment setup, asset download and the A2M evaluation wrapper
+
+## 🖊️ Citation
+
+If you find ELMA useful for your research, please cite:
+
+```bibtex
+@inproceedings{kato2026elma,
+  title     = {{ELMA}: Benchmarking Anaphoric Compositions for Long-Term Text-to-Motion Generation},
+  author    = {Kato, Shun and Yang, Dixin and Amaya, Kotaro and Wada, Yuiga and Fukuda, Kazumi and
+               Shibuya, Takashi and Mitsufuji, Yuki and Isogawa, Mariko},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS), Evaluations and Datasets Track},
+  year      = {2026},
+  eprint    = {2610.13549},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV}
+}
+```
