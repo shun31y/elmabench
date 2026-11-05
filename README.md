@@ -60,16 +60,6 @@ DATA_ROOT=/path/to/ELMA-v1.0/HML3D GPU_ID=0 EVAL_MODE=final bash scripts/eval_a2
 a `.log` with every replication and a `.json` with mean and 95% confidence interval of FID,
 R-precision (top 1–3), matching score and diversity.
 
-### Protocol
-
-- **Generation**: each entry of `HML3D/humanml_test_set_anaphora.json` is one sample with six
-  segments; only the target segment (`__ana_segNN_` in the id) has a non-zero length. Samples
-  are generated in batches of 128 with classifier-free guidance 2.5 and 1000 denoising steps.
-- **Generated set**: the target segment of each sample (1000 segments).
-- **Ground truth**: all annotated segments of the `test` split between 70 and 199 frames
-  (18,000 segments), as in FlowMDM's HumanML3D motion evaluation.
-- **Metrics**: T2M evaluator embeddings; R-precision within batches of 32; seed 10.
-
 ## Repository layout
 
 - `elmabench/evaluate.py`: evaluation entry point
