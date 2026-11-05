@@ -1,0 +1,5 @@
+# upstream FlowMDM is cloned by scripts/setup_flowmdm.sh and never committed
+/FlowMDM/
+/.venv/
+__pycache__/
+*.pyc
