@@ -15,10 +15,7 @@
 
 <br>
 
-This repository evaluates FlowMDM trained on ELMA under the anaphoric text-to-motion (A2M)
-setting. It does **not** contain FlowMDM: you clone the official
-[FlowMDM repository](https://github.com/BarqueroGerman/FlowMDM) yourself (pinned to commit
-`e81c67f`), and the code here imports it unmodified.
+This repository is the official implementation of **ELMA: Benchmarking Anaphoric Compositions for Long-Term Text-to-Motion Generation**.
 
 ## 📰 News
 
@@ -35,29 +32,37 @@ setting. It does **not** contain FlowMDM: you clone the official
 
 ## 🚀 Getting Started
 
-1. Clone upstream FlowMDM into `./FlowMDM` and create `./.venv`:
+This release evaluates FlowMDM trained on ELMA in the anaphoric text-to-motion (A2M)
+setting. FlowMDM is not included here: the setup script below clones the
+[official FlowMDM repository](https://github.com/BarqueroGerman/FlowMDM), and this code
+imports it unmodified.
+
+Requirements: `git`, `unzip`, [`uv`](https://docs.astral.sh/uv/), and a CUDA GPU.
+
+1. Set up FlowMDM and the Python environment:
 
    ```bash
    bash scripts/setup_flowmdm.sh
    ```
 
-2. Download the assets into `./FlowMDM`:
+   This command clones FlowMDM at commit `e81c67f`, installs Python 3.10 with `uv`,
+   creates `./.venv`, installs the Python dependencies, and downloads the spaCy English
+   model. The script performs all of these steps for you.
+
+2. Prepare the assets needed for evaluation:
 
    ```bash
    bash scripts/prepare_assets.sh
    ```
 
-   - SMPL body models and GloVe, with FlowMDM's own download scripts
-   - the ELMA text-motion evaluator and its normalization statistics for evaluating on ELMA
-     `v1.0` (`t2m/humanml/text_mot_match/model/finest.tar`, `dataset/t2m_{mean,std}.npy`)
-   - the FlowMDM A2M checkpoint trained on ELMA `v1.0`
-     (`results/humanml/ELMAv3_anap_hml3d_hist/model000550000.pt`)
+   This command downloads the SMPL body models and GloVe using FlowMDM's scripts,
+   then downloads the ELMA `v1.0` text-motion evaluator, normalization statistics,
+   and FlowMDM A2M checkpoint into `./FlowMDM`. It verifies the SHA256 hashes of
+   the evaluator, statistics, and checkpoint; no separate asset downloads are needed.
 
-   The script checks the SHA256 of the evaluator, the statistics and the checkpoint.
-
-   These files are for ELMA `v1.0`, the data used in the paper. To train or evaluate on the
-   latest version of the dataset, you need to prepare your own evaluator, normalization
-   statistics and checkpoint.
+   These assets are for ELMA `v1.0`, the data used in the paper. To train or evaluate on
+   the latest version of the dataset, you need to prepare your own evaluator,
+   normalization statistics, and checkpoint.
 
 3. Download the HumanML3D-format export of ELMA (`HML3D.tar`, ~12 GB) from
    [Hugging Face](https://huggingface.co/datasets/shun31y/ELMA):
