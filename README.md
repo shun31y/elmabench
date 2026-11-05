@@ -70,6 +70,16 @@ checkpoint / conditioning combinations (e.g. T2M → A2M: the T2M checkpoint wit
 `--use_history_text --history_current_weight 0.5`) go through `python -m elmabench.evaluate`
 directly; see `--help`.
 
+### Ground-truth reference
+
+`--ground_truth` scores the real target segments of the evaluation file in place of generated
+ones, against the same GT statistics as the model runs (the model is loaded only to keep the
+random stream identical):
+
+```bash
+DATA_ROOT=/path/to/ELMA-v1.1/HML3D EVAL_MODE=final bash scripts/eval_a2m.sh --ground_truth
+```
+
 ### Protocol
 
 - **Generation**: each entry of `HML3D/humanml_test_set_anaphora.json` is one sample with six

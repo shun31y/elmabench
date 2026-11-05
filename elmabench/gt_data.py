@@ -71,3 +71,43 @@ class GTSegments(Dataset):
         if length < MAX_LEN:
             motion = np.concatenate([motion, np.zeros((MAX_LEN - length, motion.shape[1]))], axis=0)
         return word_emb, pos_ohot, text["caption"], sent_len, motion, length, tokens
+
+
+def load_target_segments(data_root, samples):
+    """The real target segment of each evaluation sample, for a ground-truth reference row.
+
+    Timestamps come from the sample's own text file; the motion from its episode (the
+    per-sample __ana motion files are copies of the episode and some are missing).
+    """
+    targets = []
+    for s in samples:
+        entry = read_text_file(os.path.join(data_root, "texts", s["source_id"] + ".txt"))[s["target"]]
+        caption = s["texts"][s["target"]]
+        if entry["caption"] != caption:
+            raise ValueError(f"{s['id']}: text file caption {entry['caption']!r} != evaluation file {caption!r}")
+        motion = np.load(os.path.join(data_root, "new_joint_vecs", s["source_id"].split("__")[0] + ".npy"))
+        targets.append((motion[int(entry["start"] * FPS):int(entry["end"] * FPS)], caption))
+    return targets
+
+
+class GTTargets(Dataset):
+    """Real target segments scored like generated ones (captions tokenized the same way)."""
+
+    def __init__(self, targets, mean, std, w_vectorizer, process_tokens, get_tokens):
+        self.items = []
+        for motion, caption in targets:
+            length = len(motion)
+            motion = (motion - mean) / std
+            motion = np.concatenate([motion, np.zeros((MAX_LEN - length, motion.shape[1]))], axis=0)
+            self.items.append((motion, length, caption))
+        self.w_vectorizer = w_vectorizer
+        self.process_tokens = process_tokens
+        self.get_tokens = get_tokens
+
+    def __len__(self):
+        return len(self.items)
+
+    def __getitem__(self, item):
+        motion, length, caption = self.items[item]
+        word_emb, pos_ohot, sent_len, tokens = self.process_tokens(self.get_tokens(caption), MAX_TEXT_TOKENS, self.w_vectorizer)
+        return word_emb, pos_ohot, caption, sent_len, motion, length, tokens
