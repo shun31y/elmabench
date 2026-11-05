@@ -98,6 +98,10 @@ The other segments provide generated motion context. Their captions enter the sa
 history-text conditioning as above. The default scenario, `anaphora`, generates only
 the 100-frame target segment.
 
+> **Note:** Full-generation evaluation takes substantially longer than target-only
+> evaluation because it generates all 600 frames for every sample. The `fast` and `final`
+> modes repeat this generation 5 and 10 times, respectively.
+
 ## 🖊️ Citation
 
 If you find ELMA useful for your research, please cite:
