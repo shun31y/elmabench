@@ -56,30 +56,6 @@ DATA_ROOT=/path/to/ELMA-v1.1/HML3D GPU_ID=0 EVAL_MODE=final bash scripts/eval_a2
 a `.log` with every replication and a `.json` with mean and 95% confidence interval of FID,
 R-precision (top 1–3), matching score and diversity.
 
-## T2M evaluation
-
-T2M → T2M: the checkpoint trained without history text, conditioned only on each segment's
-own caption, on the same `test_anaphora` samples:
-
-```bash
-DATA_ROOT=/path/to/ELMA-v1.1/HML3D GPU_ID=0 EVAL_MODE=final bash scripts/eval_t2m.sh
-```
-
-Results go to `FlowMDM/results/humanml/ELMAv3_anap_hml3d/elma_evaluation/`. Other
-checkpoint / conditioning combinations (e.g. T2M → A2M: the T2M checkpoint with
-`--use_history_text --history_current_weight 0.5`) go through `python -m elmabench.evaluate`
-directly; see `--help`.
-
-### Ground-truth reference
-
-`--ground_truth` scores the real target segments of the evaluation file in place of generated
-ones, against the same GT statistics as the model runs (the model is loaded only to keep the
-random stream identical):
-
-```bash
-DATA_ROOT=/path/to/ELMA-v1.1/HML3D EVAL_MODE=final bash scripts/eval_a2m.sh --ground_truth
-```
-
 ### Protocol
 
 - **Generation**: each entry of `HML3D/humanml_test_set_anaphora.json` is one sample with six
@@ -94,7 +70,7 @@ DATA_ROOT=/path/to/ELMA-v1.1/HML3D EVAL_MODE=final bash scripts/eval_a2m.sh --gr
 
 - `elmabench/evaluate.py`: evaluation entry point
 - `elmabench/sampler.py`: batched multi-segment sampling with an upstream FlowMDM model
-- `elmabench/history.py`: text conditioning (per-segment captions, history-text mix)
+- `elmabench/history.py`: history-text conditioning
 - `elmabench/gt_data.py`, `elmabench/generated_data.py`: GT and generated evaluation sets
 - `elmabench/upstream.py`: checks and imports the FlowMDM checkout
-- `scripts/`: environment setup, asset download and the A2M / T2M evaluation wrappers
+- `scripts/`: environment setup, asset download and the A2M evaluation wrapper
