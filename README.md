@@ -50,15 +50,19 @@ Requirements: `git`, `unzip`, [`uv`](https://docs.astral.sh/uv/), a CUDA GPU.
    ```
 
    - SMPL body models and GloVe, with FlowMDM's own download scripts
-   - the ELMA text-motion evaluator and its normalization statistics
-     (`t2m/humanml/text_mot_match/model/finest.tar`, `dataset/t2m_{mean,std}.npy`)
-   - the ELMA-trained FlowMDM A2M checkpoint (`results/humanml/ELMAv3_anap_hml3d_hist/model000550000.pt`)
+   - the ELMA text-motion evaluator and its normalization statistics for evaluating on ELMA
+     `v1.0` (`t2m/humanml/text_mot_match/model/finest.tar`, `dataset/t2m_{mean,std}.npy`)
+   - the FlowMDM A2M checkpoint trained on ELMA `v1.0`
+     (`results/humanml/ELMAv3_anap_hml3d_hist/model000550000.pt`)
 
    The script checks the SHA256 of the evaluator, the statistics and the checkpoint.
 
+   These files are for ELMA `v1.0`, the data used in the paper. To train or evaluate on the
+   latest version of the dataset, you need to prepare your own evaluator, normalization
+   statistics and checkpoint.
+
 3. Download the HumanML3D-format export of ELMA (`HML3D.tar`, ~12 GB) from
-   [Hugging Face](https://huggingface.co/datasets/shun31y/ELMA). The checkpoint and the
-   evaluator statistics above correspond to `v1.0`, the data used in the paper.
+   [Hugging Face](https://huggingface.co/datasets/shun31y/ELMA):
 
    ```bash
    pip install -U huggingface_hub   # outside .venv, which pins an older version
@@ -73,9 +77,7 @@ Requirements: `git`, `unzip`, [`uv`](https://docs.astral.sh/uv/), a CUDA GPU.
 
 ## 📊 A2M Evaluation
 
-A2M → A2M: the history-text checkpoint, conditioned on each segment's caption mixed with the
-captions before it (`0.5 * current + 0.5 * mean(previous)` CLIP embeddings), evaluated on
-`test_anaphora`:
+To evaluate in the A2M setting, run the following command:
 
 ```bash
 DATA_ROOT=/path/to/ELMA-v1.0/HML3D GPU_ID=0 EVAL_MODE=final bash scripts/eval_a2m.sh
