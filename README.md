@@ -56,14 +56,19 @@ DATA_ROOT=/path/to/ELMA-v1.1/HML3D GPU_ID=0 EVAL_MODE=final bash scripts/eval_a2
 a `.log` with every replication and a `.json` with mean and 95% confidence interval of FID,
 R-precision (top 1–3), matching score and diversity.
 
-Other checkpoints and settings go through the module directly, e.g. the T2M checkpoint
-without history-text conditioning:
+## T2M evaluation
+
+T2M → T2M: the checkpoint trained without history text, conditioned only on each segment's
+own caption, on the same `test_anaphora` samples:
 
 ```bash
-.venv/bin/python -m elmabench.evaluate --flowmdm_dir FlowMDM \
-  --model_path FlowMDM/results/humanml/ELMAv3_anap_hml3d/model000550000.pt \
-  --data_root /path/to/ELMA-v1.1/HML3D --eval_mode final
+DATA_ROOT=/path/to/ELMA-v1.1/HML3D GPU_ID=0 EVAL_MODE=final bash scripts/eval_t2m.sh
 ```
+
+Results go to `FlowMDM/results/humanml/ELMAv3_anap_hml3d/elma_evaluation/`. Other
+checkpoint / conditioning combinations (e.g. T2M → A2M: the T2M checkpoint with
+`--use_history_text --history_current_weight 0.5`) go through `python -m elmabench.evaluate`
+directly; see `--help`.
 
 ### Protocol
 
@@ -79,7 +84,7 @@ without history-text conditioning:
 
 - `elmabench/evaluate.py`: evaluation entry point
 - `elmabench/sampler.py`: batched multi-segment sampling with an upstream FlowMDM model
-- `elmabench/history.py`: history-text conditioning
+- `elmabench/history.py`: text conditioning (per-segment captions, history-text mix)
 - `elmabench/gt_data.py`, `elmabench/generated_data.py`: GT and generated evaluation sets
 - `elmabench/upstream.py`: checks and imports the FlowMDM checkout
-- `scripts/`: environment setup, asset download and the A2M evaluation wrapper
+- `scripts/`: environment setup, asset download and the A2M / T2M evaluation wrappers

@@ -42,8 +42,8 @@ def build_conditioning(samples, guidance_param, clip_model, history_weight, devi
         "pe_bias": pe_bias,
         "scale": torch.ones(bs, device=device) * guidance_param,
     }
-    if history_weight is not None:
-        y["text_embeddings"] = segment_embeddings(clip_model, samples, history_weight)
+    # always precomputed: the ELMA checkpoints use 24-token captions, upstream encode_text uses 20
+    y["text_embeddings"] = segment_embeddings(clip_model, samples, history_weight)
     return {"y": y}, nframes
 
 

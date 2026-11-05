@@ -1,4 +1,4 @@
-"""A2M text conditioning: each segment is conditioned on a mix of its own caption and the
+"""Text conditioning. A2M: each segment is conditioned on a mix of its own caption and the
 captions of the segments before it.
 
     e_k = w * clip(c_k) + (1 - w) * mean(clip(c_1), ..., clip(c_{k-1}))      (e_1 = clip(c_1))
@@ -28,10 +28,17 @@ def history_embedding(clip_model, history, current_weight):
     return current_weight * encoded[-1] + (1.0 - current_weight) * encoded[:-1].mean(dim=0)
 
 
-def segment_embeddings(clip_model, samples, current_weight):
-    """[max_segments, batch, clip_dim] embeddings for FlowMDM's multi-text conditioning."""
+def segment_embeddings(clip_model, samples, current_weight=None):
+    """[max_segments, batch, clip_dim] embeddings for FlowMDM's multi-text conditioning.
+
+    current_weight=None is plain T2M conditioning: each segment sees only its own caption.
+    """
     device = next(clip_model.parameters()).device
     max_segments = max(len(s["texts"]) for s in samples)
+    if current_weight is None:
+        # one CLIP batch per sample, padded with empty captions to the longest sample
+        return torch.stack([clip_encode(clip_model, list(s["texts"]) + [""] * (max_segments - len(s["texts"])))
+                            for s in samples], dim=1)
     out = torch.zeros((max_segments, len(samples), clip_model.text_projection.shape[1]),
                       device=device, dtype=torch.float32)
     for b, sample in enumerate(samples):
