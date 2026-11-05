@@ -34,7 +34,6 @@ def load_eval_samples(eval_file, scenario):
             raise ValueError(f"{entry['id']}: {len(entry['text'])} captions for {len(lengths)} segments")
         samples.append({
             "id": entry["id"],
-            "source_id": entry.get("source_id", entry["id"]),
             "texts": entry["text"],
             "lengths": lengths,
             "histories": entry.get("history_text"),

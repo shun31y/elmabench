@@ -17,7 +17,7 @@ from datetime import datetime
 import numpy as np
 
 from elmabench.generated_data import GeneratedSegments, generate_targets, load_eval_samples
-from elmabench.gt_data import GTSegments, GTTargets, load_segments, load_target_segments
+from elmabench.gt_data import GTSegments, load_segments
 from elmabench.upstream import enter_flowmdm
 
 EVAL_MODES = {  # replications, diversity_times
@@ -44,9 +44,6 @@ def parse_args():
     parser.add_argument("--seed", default=10, type=int)
     parser.add_argument("--device", default=0, type=int)
     parser.add_argument("--output_dir", default="", help="defaults to <model dir>/elma_evaluation")
-    parser.add_argument("--ground_truth", action="store_true",
-                        help="score the real target segments instead of generated ones (GT reference row); "
-                             "the model is still loaded so that the GT statistics match the model runs")
     args = parser.parse_args()
     if not 0.0 <= args.history_current_weight <= 1.0:
         parser.error("--history_current_weight must be in [0, 1]")
@@ -75,8 +72,6 @@ def log_name(args):
     niter = os.path.basename(args.model_path).replace("model", "").replace(".pt", "")
     cond = f"hist_w{args.history_current_weight:g}" if args.use_history_text else "nohist"
     data = os.path.basename(os.path.splitext(args.eval_file)[0])
-    if args.ground_truth:
-        return f"GT_{SCENARIO}_{data}_{args.eval_mode}_s{args.seed}"
     return f"{model}_{niter}_{SCENARIO}_{cond}_g{args.guidance_param:g}_{data}_{args.eval_mode}_s{args.seed}"
 
 
@@ -138,14 +133,10 @@ def main():
     for rep in range(replications):
         report(f"==================== Replication {rep} ====================")
         report(f"Time: {datetime.now()}")
-        if args.ground_truth:
-            generated = GTTargets(load_target_segments(args.data_root, samples), eval_mean, eval_std,
-                                  w_vectorizer, process_tokens, get_tokens)
-        else:
-            targets = generate_targets(model, diffusion, samples, args.guidance_param, history_weight,
-                                       args.generation_batch_size)
-            generated = GeneratedSegments(targets, model_mean, model_std, eval_mean, eval_std,
-                                          w_vectorizer, process_tokens, get_tokens)
+        targets = generate_targets(model, diffusion, samples, args.guidance_param, history_weight,
+                                   args.generation_batch_size)
+        generated = GeneratedSegments(targets, model_mean, model_std, eval_mean, eval_std,
+                                      w_vectorizer, process_tokens, get_tokens)
         loader = DataLoader(generated, batch_size=EVAL_BATCH_SIZE, shuffle=False, num_workers=0,
                             drop_last=False, collate_fn=collate)
         matching, r_precision, activations = evaluate_matching_score(eval_wrapper, {"motion": loader}, log)
